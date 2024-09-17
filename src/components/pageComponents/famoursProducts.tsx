@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
   Carousel,
@@ -33,38 +35,75 @@ const famousProducts = [
   { _id: "10", name: "Village", image: product10, path: "/" },
 ];
 
-const FamousProducts = () => (
-  <div className="w-full lg:max-w-7xl mx-auto my-8">
-    <Carousel>
-      <CarouselContent>
-        {famousProducts.map(({ _id, name, image }) => (
-          <CarouselItem
-            key={_id}
-            className="basis-full md:basis-1/2 lg:basis-1/3 p-4"
-          >
-            <Card className="w-full h-full">
-              <CardContent className="p-0 relative w-full h-full">
-                <div className="relative min-w-96 h-96">
-                  <Image
-                    src={image}
-                    alt={`${name} product`}
-                    layout="fill"
-                    objectFit="cover"
-                    className="transition-transform duration-300 hover:scale-105"
-                  />
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 text-center">
-                  {name}
-                </div>
-              </CardContent>
-            </Card>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious className="left-2" />
-      <CarouselNext className="right-2" />
-    </Carousel>
-  </div>
-);
+const FamousProducts: React.FC = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState<"forward" | "backward">("forward");
+  const nextButtonRef = useRef<HTMLButtonElement>(null);
+  const prevButtonRef = useRef<HTMLButtonElement>(null);
+  console.log(currentIndex);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => {
+        const isForward = direction === "forward";
+        const isLastIndex = prevIndex === famousProducts.length - 1;
+        const isFirstIndex = prevIndex === 0;
+
+        if (isForward && isLastIndex) {
+          setDirection("backward");
+          prevButtonRef.current?.click();
+          return prevIndex - 1;
+        }
+
+        if (!isForward && isFirstIndex) {
+          setDirection("forward");
+          nextButtonRef.current?.click();
+          return prevIndex + 1;
+        }
+
+        isForward
+          ? nextButtonRef.current?.click()
+          : prevButtonRef.current?.click();
+        return isForward ? prevIndex + 1 : prevIndex - 1;
+      });
+    }, 1500);
+
+    return () => clearInterval(interval);
+  }, [direction]);
+
+  return (
+    <div className="w-full lg:max-w-7xl mx-auto">
+      <Carousel>
+        <CarouselContent>
+          {famousProducts.map(({ _id, name, image }) => (
+            <CarouselItem
+              key={_id}
+              className="basis-full md:basis-1/2 lg:basis-1/3 p-4"
+            >
+              <Card className="w-full h-full">
+                <CardContent className="p-0 relative w-full h-full">
+                  <div className="relative min-w-96 h-96">
+                    <Image
+                      src={image}
+                      alt={`${name} product`}
+                      layout="fill"
+                      objectFit="cover"
+                      className="transition-transform duration-300 hover:scale-105"
+                    />
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 text-center">
+                    {name}
+                  </div>
+                </CardContent>
+              </Card>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious ref={prevButtonRef} className="left-2" />
+        <CarouselNext ref={nextButtonRef} className="right-2" />
+      </Carousel>
+    </div>
+  );
+};
 
 export default FamousProducts;

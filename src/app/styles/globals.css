@@ -2,10 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
+/* Apply smooth scrolling for the whole document */
+html {
   scroll-behavior: smooth;
+}
+
+/* Apply balanced text wrapping for all text elements */
+body * {
   text-wrap: balance;
 }
+
+/* Customize the scrollbar style for all elements */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: gray transparent; /* Adding a background color (transparent or another color) for better visibility */
+}
+
+/* For WebKit browsers (Chrome, Safari, Edge), customize the scrollbar */
+*::-webkit-scrollbar {
+  width: 8px; /* Adjust width of the scrollbar */
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgb(241, 0, 0); /* Custom scrollbar color */
+  border-radius: 10px; /* Rounded edges for the scrollbar */
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent; /* Background of the scrollbar track */
+}
+
 
 
 @layer base {

@@ -1,6 +1,7 @@
 import React from "react";
-import Navbar from "@/components/pageComponents/navbar";
-import Footer from "@/components/pageComponents/footer";
+import Navbar from "@/components/share/navbar";
+import Footer from "@/components/share/footer";
+import ScrollToTop from "@/components/share/scrollToTop";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -14,7 +15,10 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
       </nav>
 
       {/* Content: Flex-grow ensures this takes up remaining space */}
-      <main className="flex-grow">{children}</main>
+      <main className="flex-grow">
+        {children}
+        <ScrollToTop />
+      </main>
 
       {/* Footer */}
       <footer className="w-full">

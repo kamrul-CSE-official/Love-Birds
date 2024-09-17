@@ -2,7 +2,7 @@ import Image from "next/image";
 import loadingImg from "@/assets/love-bards logo.gif";
 
 const Loading = () => (
-  <div className="flex items-center justify-center p-3 mx-3 mt-10">
+  <div className="flex items-center justify-center p-3 mx-3 mt-32">
     <Image
       src={loadingImg}
       alt="Loading..."

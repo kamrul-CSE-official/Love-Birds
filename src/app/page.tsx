@@ -1,23 +1,17 @@
-"use client";
-
-import { useState, useEffect } from "react";
+import React, { Suspense } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import FamousProducts from "@/components/pageComponents/famoursProducts";
-import banner1 from "@/assets/banner image.jpg";
-import banner2 from "@/assets/banner1.1.jpg";
-import banner3 from "@/assets/banner1.2.jpg";
-import banner4 from "@/assets/banner1.3.jpg";
-import banner5 from "@/assets/banner1.4.jpg";
-import banner6 from "@/assets/banner1.5.jpg";
-import banner7 from "@/assets/banner1.6.jpg";
-import banner8 from "@/assets/banner1.7.jpg";
-import banner9 from "@/assets/banner1.8.jpg";
-import banner10 from "@/assets/banner1.9.jpg";
-import banner11 from "@/assets/banner1.10.jpg";
-import banner12 from "@/assets/banner1.11.jpg";
-import banner13 from "@/assets/banner1.12.jpg";
+import BestSellsProducts from "@/components/pageComponents/bestSellsProducts";
+import TestimonialCarousel from "@/components/pageComponents/testimonals";
+import YouMayLike from "@/components/pageComponents/youMayLike";
+
+const HomePageBanner = React.lazy(
+  () => import("@/components/pageComponents/homePageBanner")
+);
+const ProductInfo = React.lazy(
+  () => import("@/components/pageComponents/productInfo")
+);
 
 import categories1 from "@/assets/Handicraft-1.jpg";
 import categories2 from "@/assets/Water-2.jpg";
@@ -33,65 +27,18 @@ const categories = [
   { name: "KITCHEN & DINING", image: categories5 },
 ];
 
-// List of banners
-const banners = [
-  banner1,
-  banner2,
-  banner3,
-  banner4,
-  banner5,
-  banner6,
-  banner7,
-  banner8,
-  banner9,
-  banner10,
-  banner11,
-  banner12,
-  banner13,
-];
-
 export default function Home() {
-  const [currentBanner, setCurrentBanner] = useState(0);
-
-  useEffect(() => {
-    // Function to change the banner every 5 seconds
-    const intervalId = setInterval(() => {
-      setCurrentBanner((prevBanner) =>
-        prevBanner === banners.length - 1 ? 0 : prevBanner + 1
-      );
-    }, 5000); // Change every 5 seconds
-
-    // Clean up the interval when component unmounts
-    return () => clearInterval(intervalId);
-  }, []);
-
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <div className="relative w-full flex-grow h-[75vh] mt-0 lg:mt-9">
-        <motion.div
-          key={currentBanner}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 1.05 }}
-          transition={{ duration: 1, ease: "easeInOut" }}
-          className="absolute inset-0"
-        >
-          <Image
-            src={banners[currentBanner]}
-            alt="Decorative handicraft items"
-            layout="fill"
-            objectFit="cover"
-            priority
-            className="w-full h-full"
-          />
-        </motion.div>
-      </div>
+      <Suspense fallback={<div>Loading banner...</div>}>
+        <HomePageBanner />
+      </Suspense>
 
       {/* Categories Section */}
       <div className="bg-secondary py-4 px-2 sm:px-4 mb-5">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-center flex-wrap gap-8 lg:gap-10">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {categories.map((category, index) => (
               <Link
                 href={`/category/${category.name
@@ -100,13 +47,13 @@ export default function Home() {
                 key={index}
               >
                 <div className="flex flex-col items-center group">
-                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 mb-2">
+                  <div className="relative w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 mb-2">
                     <Image
                       src={category.image}
                       alt={category.name}
                       layout="fill"
                       objectFit="cover"
-                      className="rounded-full border-2 border-primary group-hover:scale-125 transform transition duration-100"
+                      className="rounded-full border-2 border-primary group-hover:scale-1 transform transition duration-150"
                     />
                   </div>
                   <span className="text-xs sm:text-sm text-center font-semibold">
@@ -119,8 +66,24 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Famous Products */}
-      <FamousProducts />
+      <div className="space-y-8 mb-10">
+        {/* Famous Products */}
+        <FamousProducts />
+
+        {/* Best Sells Products */}
+        <BestSellsProducts />
+
+        {/* Products Info */}
+        <Suspense fallback={<div>Loading products info</div>}>
+          <ProductInfo />
+        </Suspense>
+
+        {/* You May Like */}
+        <YouMayLike />
+
+        {/* Testimonial */}
+        <TestimonialCarousel />
+      </div>
     </div>
   );
 }
