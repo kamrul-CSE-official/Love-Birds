@@ -95,14 +95,14 @@ export default function ProductInfo() {
             Discover our collection of exquisite handcrafted items made by
             talented artisans from around the world. Each piece tells a story,
             combining tradition, artistry, and a passion for craftsmanship.
-            Whether you're looking to add a touch of elegance to your living
+            Whether you are looking to add a touch of elegance to your living
             space or searching for the perfect gift, our selection offers
             something truly special.
           </p>
           <p className="mt-4 text-sm md:text-base">
             We are committed to supporting independent creators and ensuring
             that their work reaches a broader audience. By purchasing from our
-            store, you're not just buying a product—you're supporting a
+            store, you are not just buying a product—you are supporting a
             community of passionate artisans who put their heart into every item
             they create.
           </p>
