@@ -3,6 +3,15 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
+import { Button } from "../ui/button";
 
 import banner1 from "@/assets/banner image.jpg";
 import banner2 from "@/assets/banner1.1.jpg";
@@ -17,6 +26,9 @@ import banner10 from "@/assets/banner1.9.jpg";
 import banner11 from "@/assets/banner1.10.jpg";
 import banner12 from "@/assets/banner1.11.jpg";
 import banner13 from "@/assets/banner1.12.jpg";
+
+import offerImg from "@/assets/offer dialog.gif"; // Importing the offer GIF image
+import localStorageServices from "@/helper/localStorageServices";
 
 // List of banners
 const banners = [
@@ -37,28 +49,74 @@ const banners = [
 
 const HomePageBanner = () => {
   const [currentBanner, setCurrentBanner] = useState(0);
+  const [isDialogOpen, setIsDialogOpen] = useState(false); // State to manage dialog open
 
+  // Cycle through banners every 7 seconds
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentBanner((prevBanner) =>
         prevBanner === banners.length - 1 ? 0 : prevBanner + 1
       );
-    }, 7000); // Change every 7 seconds
+    }, 7000);
 
     return () => clearInterval(intervalId);
   }, []);
 
+  // Preload the next banner image
   useEffect(() => {
-    // Preload the next image
     const nextBanner = (currentBanner + 1) % banners.length;
-
-    // Use HTMLImageElement for correct typing
-    const img = new window.Image(); // Explicitly refer to window.Image
-    img.src = banners[nextBanner].src; // Use the `src` field correctly
+    const img = new window.Image();
+    img.src = banners[nextBanner].src;
   }, [currentBanner]);
+
+  // Automatically open the dialog on first-time visit
+  useEffect(() => {
+    const hasVisited = localStorageServices.getItemWithExpiry("hasVisited");
+
+    if (!hasVisited) {
+      setTimeout(() => {
+        setIsDialogOpen(true);
+        localStorageServices.setItemWithExpiry(
+          "hasVisited",
+          "true",
+          1 * 60 * 60 * 1000 // 1 hour
+        );
+      }, 2500);
+    }
+  }, []);
 
   return (
     <div className="relative w-full flex-grow h-[69vh] mt-0 lg:mt-9">
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Exclusive Offer</DialogTitle>
+            <DialogDescription>
+              Get the best deals on our unique handicraft items. Limited time
+              only!
+            </DialogDescription>
+          </DialogHeader>
+
+          {/* Adding the offer GIF inside the dialog */}
+          <div className="flex justify-center my-1">
+            <Image
+              src={offerImg}
+              alt="Exclusive Offer"
+              width={300}
+              height={300}
+              className="rounded-lg"
+            />
+          </div>
+
+          <DialogFooter>
+            <Button type="submit" onClick={() => setIsDialogOpen(false)}>
+              Claim Offer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Banner slider with animation */}
       <motion.div
         key={currentBanner}
         initial={{ opacity: 0, scale: 0.95 }}
@@ -72,7 +130,7 @@ const HomePageBanner = () => {
           alt="Decorative handicraft items"
           layout="fill"
           objectFit="cover"
-          priority={currentBanner === 0} // Prioritize the first image only
+          priority={currentBanner === 0} // Prioritize first image
           className="w-full h-full"
         />
       </motion.div>
