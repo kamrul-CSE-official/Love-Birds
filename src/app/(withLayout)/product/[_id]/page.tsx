@@ -70,7 +70,7 @@ export default function ProductPage({ params }: { params: { _id: string } }) {
           <div className="flex items-center space-x-4 mb-4">
             <Input type="number" defaultValue="1" className="w-20" />
             <Button>Add to Cart</Button>
-            <Button variant="outline">Buy Now</Button>
+            <Button variant="secondary">Buy Now</Button>
           </div>
           <div className="flex items-center space-x-4 text-sm text-gray-600">
             <div className="flex items-center">
