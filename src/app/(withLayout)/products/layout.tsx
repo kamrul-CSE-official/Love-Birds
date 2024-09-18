@@ -30,7 +30,6 @@ export default function ProductsLayout({
   const searchBrand = searchParams.get("brand");
   const searchMaxPrice = searchParams.get("max_price");
   const searchMinPrice = searchParams.get("min_price");
-  const searchSize = searchParams.get("size");
   const searchPage = searchParams.get("page") || "1";
   const searchQuantity = searchParams.get("quantity") || "12";
   const searchSort = searchParams.get("sort");
@@ -40,10 +39,19 @@ export default function ProductsLayout({
   const [brand, setBrand] = useState<string | null>(searchBrand);
   const [maxPrice, setMaxPrice] = useState<string | null>(searchMaxPrice);
   const [minPrice, setMinPrice] = useState<string | null>(searchMinPrice);
-  const [size, setSize] = useState<string | null>(searchSize);
   const [page, setPage] = useState<string | null>(searchPage);
   const [quantity, setQuantity] = useState<string | null>(searchQuantity);
   const [sort, setSort] = useState<string | null>(searchSort);
+
+  useEffect(() => {
+    if (searchName) {
+      setName(searchName);
+    } else if (searchPage) {
+      setPage(searchPage);
+    } else if (searchQuantity) {
+      setQuantity(searchQuantity);
+    }
+  }, []);
 
   const [url, setUrl] = useState<string>(
     `/products?quantity=${quantity}&page=${page}&minPrice=${minPrice}&maxPrice=${maxPrice}&brand=${brand}&category=${category}&name=${name}&sort=${sort}`
@@ -53,7 +61,7 @@ export default function ProductsLayout({
     setUrl(
       `/products?quantity=${quantity}&page=${page}&minPrice=${minPrice}&maxPrice=${maxPrice}&brand=${brand}&category=${category}&name=${name}&sort=${sort}`
     );
-  }, [name, category, brand, maxPrice, minPrice, size, page, quantity, sort]);
+  }, [name, category, brand, maxPrice, minPrice, page, quantity, sort]);
 
   useEffect(() => {
     route.push(url);
