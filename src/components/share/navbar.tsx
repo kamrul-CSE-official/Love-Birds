@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import Image from "next/image";
 import { FaSearch, FaHeart, FaShoppingCart, FaUser } from "react-icons/fa";
@@ -28,6 +30,8 @@ import {
 import { MenuSquareIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 // Navigation items and product types as constants
 const navItems = [
@@ -49,6 +53,34 @@ const productsTypes = [
 ];
 
 export default function Navbar() {
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
+  const router = useRouter();
+
+  const handleSearch = () => {
+    let queryParams = "";
+
+    // Construct query based on searchValue and category
+    if (searchValue && category) {
+      queryParams = new URLSearchParams({
+        name: searchValue,
+        category,
+      }).toString();
+    } else if (searchValue && !category) {
+      queryParams = new URLSearchParams({
+        name: searchValue,
+      }).toString();
+    } else if (!searchValue && category) {
+      queryParams = new URLSearchParams({
+        category,
+      }).toString();
+    }
+
+    // Only append query parameters if they exist
+    const searchPath = queryParams ? `/products?${queryParams}` : "/products";
+    router.push(searchPath);
+  };
+
   return (
     <nav className="flex flex-col w-full">
       {/* Top section */}
@@ -69,10 +101,12 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center order-2 flex-grow max-w-xl mx-4">
             <Input
               type="search"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
               placeholder="What are you looking for?"
               className="bg-transparent border-white text-white placeholder-white flex-grow"
             />
-            <Button variant="secondary" className="ml-2">
+            <Button onClick={handleSearch} variant="secondary" className="ml-2">
               <FaSearch />
             </Button>
           </div>
@@ -89,8 +123,11 @@ export default function Navbar() {
               </Button>
             </Link>
             <Link href="/wish-list">
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="relative">
                 <FaHeart className="h-5 w-5" />
+                <span className="absolute top-0 right-0 bg-white text-primary rounded-full h-4 w-4 flex items-center justify-center text-xs">
+                  0
+                </span>
               </Button>
             </Link>
             <Link href="/add-to-cart">
@@ -141,12 +178,16 @@ export default function Navbar() {
                 <DialogHeader>
                   <DialogTitle>Search</DialogTitle>
                   <DialogDescription>
-                    Search through our services and categories.
+                    Search through our products and categories.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
-                  <Input placeholder="Type your search keywords" />
-                  <Select>
+                  <Input
+                    placeholder="Type your search keywords"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                  />
+                  <Select onValueChange={(value) => setCategory(value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
@@ -158,7 +199,9 @@ export default function Navbar() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <Button className="w-full">Search</Button>
+                  <Button className="w-full" onClick={handleSearch}>
+                    Search
+                  </Button>
                 </div>
               </DialogContent>
             </Dialog>

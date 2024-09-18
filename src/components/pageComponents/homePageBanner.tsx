@@ -79,7 +79,7 @@ const HomePageBanner = () => {
         localStorageServices.setItemWithExpiry(
           "hasVisited",
           "true",
-          1 * 60 * 60 * 1000 // 1 hour
+          4 * 60 * 1000 // 4 min
         );
       }, 2500);
     }

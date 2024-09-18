@@ -34,7 +34,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <CardContent className="p-0">
         <div className="relative">
           {/* Wrap the image and name in the Link to redirect to product details */}
-          <Link href={`/product-details/${product._id}`}>
+          <Link href={`/product/${product._id}`}>
             <Image
               src={product.image}
               alt={product.name}

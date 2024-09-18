@@ -21,6 +21,7 @@ import product7 from "@/assets/p-7.jpg";
 import product8 from "@/assets/p-8.jpg";
 import product9 from "@/assets/p-9.jpg";
 import product10 from "@/assets/p-10.jpg";
+import Link from "next/link";
 
 const famousProducts = [
   { _id: "1", name: "Dress", image: product1, path: "/" },
@@ -80,22 +81,24 @@ const FamousProducts: React.FC = () => {
               key={_id}
               className="basis-full md:basis-1/2 lg:basis-1/3 p-4"
             >
-              <Card className="w-full h-full">
-                <CardContent className="p-0 relative w-full h-full">
-                  <div className="relative min-w-96 h-96">
-                    <Image
-                      src={image}
-                      alt={`${name} product`}
-                      layout="fill"
-                      objectFit="cover"
-                      className="transition-transform duration-300 hover:scale-105"
-                    />
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 text-center">
-                    {name}
-                  </div>
-                </CardContent>
-              </Card>
+              <Link href={`/product/${_id}`}>
+                <Card className="w-full h-full">
+                  <CardContent className="p-0 relative w-full h-full">
+                    <div className="relative min-w-96 h-96">
+                      <Image
+                        src={image}
+                        alt={`${name} product`}
+                        layout="fill"
+                        objectFit="cover"
+                        className="transition-transform duration-300 hover:scale-105"
+                      />
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 text-center">
+                      {name}
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             </CarouselItem>
           ))}
         </CarouselContent>

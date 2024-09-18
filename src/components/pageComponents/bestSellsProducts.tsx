@@ -12,6 +12,7 @@ import product9 from "@/assets/p-9.jpg";
 import product10 from "@/assets/p-10.jpg";
 import ProductCard from "../share/productCard";
 import { IProduct } from "@/types/product.type";
+import Link from "next/link";
 
 const products: IProduct[] = [
   {
@@ -94,9 +95,11 @@ export default function BestSellsProducts() {
           <p className="text-sm">Best-selling products</p>
           <h1 className="text-3xl font-semibold">Best Sellers</h1>
         </div>
-        <Button variant="outline" size="sm">
-          SEE ALL
-        </Button>
+        <Link href="/products">
+          <Button variant="outline" size="sm">
+            SEE ALL
+          </Button>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
