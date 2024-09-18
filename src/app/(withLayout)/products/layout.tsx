@@ -61,7 +61,19 @@ export default function ProductsLayout({
     setUrl(
       `/products?quantity=${quantity}&page=${page}&minPrice=${minPrice}&maxPrice=${maxPrice}&brand=${brand}&category=${category}&name=${name}&sort=${sort}`
     );
-  }, [name, category, brand, maxPrice, minPrice, page, quantity, sort]);
+  }, [
+    name,
+    category,
+    brand,
+    maxPrice,
+    minPrice,
+    page,
+    quantity,
+    searchName,
+    searchPage,
+    searchQuantity,
+    route,
+  ]);
 
   useEffect(() => {
     route.push(url);
