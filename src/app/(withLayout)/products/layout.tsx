@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { BiLeftArrow, BiRightArrow } from "react-icons/bi";
 
 export default function ProductsLayout({
   children,
@@ -42,42 +43,18 @@ export default function ProductsLayout({
   const [page, setPage] = useState<string | null>(searchPage);
   const [quantity, setQuantity] = useState<string | null>(searchQuantity);
   const [sort, setSort] = useState<string | null>(searchSort);
+  const [url, setUrl] = useState<string | null>(searchSort);
 
   useEffect(() => {
-    if (searchName) {
-      setName(searchName);
-    } else if (searchPage) {
-      setPage(searchPage);
-    } else if (searchQuantity) {
-      setQuantity(searchQuantity);
-    }
-  }, []);
-
-  const [url, setUrl] = useState<string>(
-    `/products?quantity=${quantity}&page=${page}&minPrice=${minPrice}&maxPrice=${maxPrice}&brand=${brand}&category=${category}&name=${name}&sort=${sort}`
-  );
+    if (searchName) setName(searchName);
+    if (searchPage) setPage(searchPage);
+    if (searchQuantity) setQuantity(searchQuantity);
+  }, [searchName, searchPage, searchQuantity]);
 
   useEffect(() => {
-    setUrl(
-      `/products?quantity=${quantity}&page=${page}&minPrice=${minPrice}&maxPrice=${maxPrice}&brand=${brand}&category=${category}&name=${name}&sort=${sort}`
-    );
-  }, [
-    name,
-    category,
-    brand,
-    maxPrice,
-    minPrice,
-    page,
-    quantity,
-    searchName,
-    searchPage,
-    searchQuantity,
-    route,
-  ]);
-
-  useEffect(() => {
-    route.push(url);
-  }, [url]);
+    const updatedUrl = `/products?quantity=${quantity}&page=${page}&minPrice=${minPrice}&maxPrice=${maxPrice}&brand=${brand}&category=${category}&name=${name}&sort=${sort}`;
+    route.push(updatedUrl);
+  }, [name, category, brand, maxPrice, minPrice, page, quantity, sort, route]);
 
   return (
     <div className="flex h-screen overflow-hidden mt-[7rem]">
@@ -92,6 +69,10 @@ export default function ProductsLayout({
           setMinPrice={setMinPrice}
           maxPrice={maxPrice}
           setMaxPrice={setMaxPrice}
+          page={page}
+          setPage={setPage}
+          setUrl={setUrl}
+          quantity={quantity}
         />
       </aside>
 
@@ -117,6 +98,10 @@ export default function ProductsLayout({
                   setMinPrice={setMinPrice}
                   maxPrice={maxPrice}
                   setMaxPrice={setMaxPrice}
+                  page={page}
+                  setPage={setPage}
+                  setUrl={setUrl}
+                  quantity={quantity}
                 />
               </SheetContent>
             </Sheet>
@@ -159,6 +144,10 @@ function SidebarContent({
   setMinPrice,
   maxPrice,
   setMaxPrice,
+  page,
+  setPage,
+  setUrl,
+  quantity,
 }: {
   category: string | null;
   setCategory: (value: string | null) => void;
@@ -168,6 +157,10 @@ function SidebarContent({
   setMinPrice: (value: string | null) => void;
   maxPrice: string | null;
   setMaxPrice: (value: string | null) => void;
+  page: string | null;
+  setPage: (value: string | null) => void;
+  setUrl: (value: string | null) => void;
+  quantity: string | null;
 }) {
   return (
     <nav className="space-y-6">
@@ -214,7 +207,14 @@ function SidebarContent({
             onChange={(e) => setMaxPrice(e.target.value)}
             className="w-20"
           />
-          <Button size="sm" onClick={() => console.log("Filter applied")}>
+          <Button
+            size="sm"
+            onClick={() =>
+              setUrl(
+                `/products?quantity=${quantity}&page=${page}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+              )
+            }
+          >
             Go
           </Button>
         </div>
@@ -235,6 +235,27 @@ function SidebarContent({
           onChange={() => setBrand("brand_b")}
         />
       </div>
+
+      <div>
+        <h4 className="text-sm font-medium mb-2">Pagination</h4>
+        <div className="flex items-center justify-center gap-2">
+          <Button
+            variant="secondary"
+            onClick={() =>
+              setPage(Number(page) > 1 ? (Number(page) - 1).toString() : "1")
+            }
+          >
+            <BiLeftArrow />
+          </Button>
+          <Button>{page}</Button>
+          <Button
+            variant="secondary"
+            onClick={() => setPage((Number(page) + 1).toString())}
+          >
+            <BiRightArrow />
+          </Button>
+        </div>
+      </div>
     </nav>
   );
 }
@@ -251,9 +272,14 @@ function FilterCheckbox({
   onChange: () => void;
 }) {
   return (
-    <div className="flex items-center space-x-2">
-      <Checkbox checked={checked} onCheckedChange={onChange} />
-      <label>{label}</label>
-    </div>
+    <label className="flex items-center space-x-2">
+      <Checkbox
+        checked={checked}
+        onCheckedChange={onChange}
+        id={value}
+        aria-label={label}
+      />
+      <span>{label}</span>
+    </label>
   );
 }

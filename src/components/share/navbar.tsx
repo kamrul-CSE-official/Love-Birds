@@ -32,6 +32,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import useStore from "@/app/lib/store";
 
 // Navigation items and product types as constants
 const navItems = [
@@ -56,6 +57,7 @@ export default function Navbar() {
   const [searchValue, setSearchValue] = useState<string>("");
   const [category, setCategory] = useState<string>("");
   const router = useRouter();
+  const { products, wishlist } = useStore();
 
   const handleSearch = () => {
     let queryParams = "";
@@ -113,7 +115,7 @@ export default function Navbar() {
 
           {/* Icons */}
           <div className="flex items-center space-x-2 sm:space-x-4 order-2 sm:order-3">
-            <Link href="/profile">
+            <Link href="/dashboard">
               <Button
                 variant="ghost"
                 size="icon"
@@ -126,7 +128,7 @@ export default function Navbar() {
               <Button variant="ghost" size="icon" className="relative">
                 <FaHeart className="h-5 w-5" />
                 <span className="absolute top-0 right-0 bg-white text-primary rounded-full h-4 w-4 flex items-center justify-center text-xs">
-                  0
+                  {wishlist.length}
                 </span>
               </Button>
             </Link>
@@ -134,7 +136,7 @@ export default function Navbar() {
               <Button variant="ghost" size="icon" className="relative">
                 <FaShoppingCart className="h-5 w-5" />
                 <span className="absolute top-0 right-0 bg-white text-primary rounded-full h-4 w-4 flex items-center justify-center text-xs">
-                  0
+                  {products.length}
                 </span>
               </Button>
             </Link>

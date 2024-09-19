@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "@/components/share/navbar";
 import Footer from "@/components/share/footer";
 import ScrollToTop from "@/components/share/scrollToTop";
+import { Toaster } from "react-hot-toast";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -24,6 +25,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
       <footer className="w-full">
         <Footer />
       </footer>
+      <Toaster position="top-right" />
     </div>
   );
 };
