@@ -96,7 +96,7 @@ const WishListPage = () => {
               <CardFooter>
                 <Button onClick={() => handlePlaceOrder()} className="w-full">
                   <ShoppingCart className="mr-2" size={20} />
-                  View Cart
+                  Place Order
                 </Button>
               </CardFooter>
             </Card>

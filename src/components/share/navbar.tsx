@@ -27,12 +27,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { MenuSquareIcon } from "lucide-react";
+import { Flag, MenuSquareIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import useStore from "@/app/lib/store";
+import localStorageServices from "@/helper/localStorageServices";
 
 // Navigation items and product types as constants
 const navItems = [
@@ -59,6 +60,8 @@ export default function Navbar() {
   const router = useRouter();
   const { products, wishlist } = useStore();
 
+  const isUserLogedIn = localStorageServices.getUserData();
+
   const handleSearch = () => {
     let queryParams = "";
 
@@ -81,6 +84,14 @@ export default function Navbar() {
     // Only append query parameters if they exist
     const searchPath = queryParams ? `/products?${queryParams}` : "/products";
     router.push(searchPath);
+  };
+
+  const hendleDashboard = () => {
+    if (isUserLogedIn) {
+      router.push("/dashboard");
+    } else {
+      router.push("/auth");
+    }
   };
 
   return (
@@ -115,15 +126,14 @@ export default function Navbar() {
 
           {/* Icons */}
           <div className="flex items-center space-x-2 sm:space-x-4 order-2 sm:order-3">
-            <Link href="/dashboard">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hidden sm:inline-flex"
-              >
-                <FaUser className="h-5 w-5" />
-              </Button>
-            </Link>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hidden sm:inline-flex"
+              onClick={() => hendleDashboard()}
+            >
+              <FaUser className="h-5 w-5" />
+            </Button>
             <Link href="/wish-list">
               <Button variant="ghost" size="icon" className="relative">
                 <FaHeart className="h-5 w-5" />
