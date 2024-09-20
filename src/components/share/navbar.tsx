@@ -37,6 +37,7 @@ import localStorageServices from "@/helper/localStorageServices";
 
 // Navigation items and product types as constants
 const navItems = [
+  { _id: "0", name: "Home", path: "/" },
   { _id: "1", name: "BAGS", path: "/products/BAGS" },
   { _id: "2", name: "BASKETS", path: "/products/BASKETS" },
   { _id: "3", name: "HOME DECOR", path: "/products/HOME_DECOR" },
@@ -129,7 +130,7 @@ export default function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              className="hidden sm:inline-flex"
+              className="inline-flex"
               onClick={() => hendleDashboard()}
             >
               <FaUser className="h-5 w-5" />
@@ -159,7 +160,10 @@ export default function Navbar() {
                     <MenuSquareIcon className="h-5 w-5" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent
+                  className="z-30 mt-14 md:mt-12"
+                  align="end"
+                >
                   {navItems.map((item) => (
                     <DropdownMenuItem key={item._id} asChild>
                       <Link

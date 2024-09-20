@@ -18,10 +18,13 @@ import YouMayLike from "@/components/pageComponents/youMayLike";
 import { useState } from "react";
 import { Avatar } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
+import useStore from "@/app/lib/store";
 
 export default function ProductPage({ params }: { params: { _id: string } }) {
   const [rating, setRating] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useStore();
+
   const reviews = [
     {
       author: "Nicolas Cage",
@@ -122,7 +125,11 @@ export default function ProductPage({ params }: { params: { _id: string } }) {
                 <Plus className="w-4 h-4" />
               </Button>
             </div>
-            <Button>Add to Cart</Button>
+            <Button
+            //  onClick={()=> addToCart(params)}
+            >
+              Add to Cart
+            </Button>
             <Button variant="secondary">Buy Now</Button>
           </div>
 
