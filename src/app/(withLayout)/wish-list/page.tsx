@@ -22,10 +22,7 @@ const WishListPage = () => {
   const router = useRouter();
   const { wishlist, addToOrderList } = useStore();
 
-  const totalPrice = wishlist.reduce(
-    (acc, product) => acc + parseFloat(product.price),
-    0
-  );
+  const totalPrice = wishlist.reduce((acc, product) => acc + product.price, 0);
   const totalProducts = wishlist.length;
 
   const handlePlaceOrder = () => {
