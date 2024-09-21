@@ -11,6 +11,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { IProduct } from "@/types/product.type";
+import localStorageServices from "@/services/localStorageServices";
+import { useRouter } from "next/navigation";
 
 const PlaceOrder = () => {
   const { orderList, removeFromOrderList } = useStore();
@@ -18,6 +20,8 @@ const PlaceOrder = () => {
   const [address, setAddress] = useState("");
   const [mobile, setMobile] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("cash");
+
+  const router = useRouter();
 
   const handleQuantityChange = (id: string, change: number) => {
     setQuantities((prev) => ({
@@ -35,17 +39,22 @@ const PlaceOrder = () => {
 
   const handleSubmit = async () => {
     try {
-      await axios.post("/api/orders", {
-        orderList: orderList.map((product) => ({
-          ...product,
-          quantity: quantities[product._id] || 1,
-        })),
-        total: calculateTotal(),
-        address,
-        mobile,
-        paymentMethod,
-      });
-      toast.success("Order placed successfully!");
+      const isLogedIn = localStorageServices.getItemWithExpiry("accessToken");
+      if (isLogedIn) {
+        await axios.post("/api/orders", {
+          orderList: orderList.map((product) => ({
+            ...product,
+            quantity: quantities[product._id] || 1,
+          })),
+          total: calculateTotal(),
+          address,
+          mobile,
+          paymentMethod,
+        });
+        toast.success("Order placed successfully!");
+      } else {
+        router.push("/auth");
+      }
     } catch (error) {
       console.error("Error placing order:", error);
       toast.error("Failed to place order");
@@ -63,7 +72,7 @@ const PlaceOrder = () => {
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold">
-                ${calculateTotal().toFixed(2)}
+                ৳{calculateTotal().toFixed(2)}
               </p>
             </CardContent>
           </Card>
@@ -83,10 +92,10 @@ const PlaceOrder = () => {
                     <div className="flex-1">
                       <h2 className="font-semibold">{product.name}</h2>
                       <p className="text-sm text-gray-600">
-                        Price: ${product.price}
+                        Price: ৳{product.price}
                       </p>
                       <p className="text-sm font-medium">
-                        Total: ${totalPrice.toFixed(2)}
+                        Total: ৳ {totalPrice.toFixed(2)}
                       </p>
                       <p className="text-sm font-medium">
                         Quantity: {quantity}

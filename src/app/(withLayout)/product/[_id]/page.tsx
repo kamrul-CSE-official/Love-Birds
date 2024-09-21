@@ -122,7 +122,7 @@ export default function ProductPage({ params }: { params: { _id: string } }) {
           </div>
           <p className="text-gray-600 mb-4">{productDetails?.description}</p>
           <div className="flex items-center mb-4">
-            <span className="text-2xl font-bold">₹{productDetails?.price}</span>
+            <span className="text-2xl font-bold">৳ {productDetails?.price}</span>
             <span className="ml-2 text-sm text-gray-500 line-through">
               ৳ {productDetails?.price + (productDetails.price * 20) / 100}
             </span>
