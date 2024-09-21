@@ -10,6 +10,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { IProduct } from "@/types/product.type";
 
 const PlaceOrder = () => {
   const { orderList, removeFromOrderList } = useStore();
@@ -26,9 +27,9 @@ const PlaceOrder = () => {
   };
 
   const calculateTotal = () => {
-    return orderList.reduce((total, product) => {
+    return orderList.reduce((total, product: IProduct) => {
       const quantity = quantities[product._id] || 1;
-      return total + parseFloat(product.price) * quantity;
+      return total + product.price * quantity;
     }, 0);
   };
 
@@ -58,12 +59,22 @@ const PlaceOrder = () => {
         <div className="space-y-6">
           <Card>
             <CardHeader>
+              <CardTitle>Total Amount</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold">
+                ${calculateTotal().toFixed(2)}
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
               <CardTitle>Order Summary</CardTitle>
             </CardHeader>
             <CardContent>
-              {orderList.map((product) => {
+              {orderList.map((product: IProduct) => {
                 const quantity = quantities[product._id] || 1;
-                const totalPrice = parseFloat(product.price) * quantity;
+                const totalPrice = product.price * quantity;
                 return (
                   <div
                     key={product._id}
@@ -76,6 +87,9 @@ const PlaceOrder = () => {
                       </p>
                       <p className="text-sm font-medium">
                         Total: ${totalPrice.toFixed(2)}
+                      </p>
+                      <p className="text-sm font-medium">
+                        Quantity: {quantity}
                       </p>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -106,16 +120,6 @@ const PlaceOrder = () => {
                   </div>
                 );
               })}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Total Amount</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">
-                ${calculateTotal().toFixed(2)}
-              </p>
             </CardContent>
           </Card>
         </div>

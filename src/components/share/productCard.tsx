@@ -9,8 +9,6 @@ import { TiShoppingCart } from "react-icons/ti";
 import Link from "next/link";
 import useStore from "@/app/lib/store";
 import { IProduct } from "@/types/product.type";
-import { Minus, Plus } from "lucide-react";
-import { Input } from "../ui/input";
 
 interface ProductCardProps {
   product: IProduct;
@@ -50,7 +48,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {/* Wrap the image and name in the Link to redirect to product details */}
           <Link href={`/product/${product._id}`}>
             <Image
-              src={product?.image}
+              src={product?.images[0]}
               alt={product.name}
               className="w-full h-56 object-cover"
               width={300}

@@ -33,7 +33,7 @@ import { Input } from "../ui/input";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import useStore from "@/app/lib/store";
-import localStorageServices from "@/helper/localStorageServices";
+import localStorageServices from "@/services/localStorageServices";
 
 // Navigation items and product types as constants
 const navItems = [

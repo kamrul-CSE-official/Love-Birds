@@ -28,7 +28,7 @@ import banner12 from "@/assets/banner1.11.jpg";
 import banner13 from "@/assets/banner1.12.jpg";
 
 import offerImg from "@/assets/offer dialog.gif"; // Importing the offer GIF image
-import localStorageServices from "@/helper/localStorageServices";
+import localStorageServices from "@/services/localStorageServices";
 
 // List of banners
 const banners = [

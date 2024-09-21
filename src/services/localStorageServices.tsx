@@ -1,13 +1,15 @@
 "use client";
 
-import axios from "axios";
 import toast from "react-hot-toast";
+
+const isBrowser = typeof window !== "undefined";
 
 const setItemWithExpiry = (
   key: string,
   value: object | string | number,
   ttl: number
 ): void => {
+  if (!isBrowser) return; // Ensure code runs only in the browser
   const expiryTime = Date.now() + ttl;
   const item = {
     value,
@@ -16,21 +18,11 @@ const setItemWithExpiry = (
   localStorage.setItem(key, JSON.stringify(item));
 };
 
-const getItemWithExpiry = (key: string): object | null => {
+const getItemWithExpiry = (key: string): string | null => {
+  if (!isBrowser) return null; // Ensure code runs only in the browser
   const itemStr = localStorage.getItem(key);
   if (!itemStr) return null;
-
-  try {
-    const item = JSON.parse(itemStr);
-    if (Date.now() > item.expiry) {
-      localStorage.removeItem(key);
-      return null;
-    }
-    return item.value;
-  } catch (error) {
-    console.error("Failed to parse item from localStorage", error);
-    return null;
-  }
+  return itemStr;
 };
 
 export function setLocalStorage({
@@ -40,6 +32,7 @@ export function setLocalStorage({
   key: string;
   value: string;
 }) {
+  if (!isBrowser) return;
   try {
     localStorage.setItem(key, value);
   } catch (error) {
@@ -48,6 +41,7 @@ export function setLocalStorage({
 }
 
 function getLocalStorage({ key }: { key: string }): string | null {
+  if (!isBrowser) return null;
   try {
     const dataString = localStorage.getItem(key);
     return dataString !== null ? dataString : null;
@@ -57,19 +51,8 @@ function getLocalStorage({ key }: { key: string }): string | null {
   }
 }
 
-interface IUserData {
-  [key: string]: string;
-}
-function setUserData(userDataPayload: IUserData) {
-  try {
-    const userData = JSON.stringify(userDataPayload);
-    setLocalStorage({ key: "userData", value: userData });
-  } catch (error) {
-    console.error("Error setting user data:", error);
-  }
-}
-
 function getUserData() {
+  if (!isBrowser) return null;
   try {
     const userDataStringify = localStorage.getItem("userData");
     if (userDataStringify) {
@@ -84,47 +67,28 @@ function getUserData() {
   }
 }
 
-/*
-async function logOutService() {
+function logOutService() {
+  if (!isBrowser) return;
   try {
-    const accessToken = getLocalStorage({ key: "accessToken" });
-    const axiosInstance = createAxiosInstance();
-
-    if (!accessToken) {
-      window.location.href = "/";
-      toast.error("No access token found!");
-      console.error("No access token found.");
-      return null;
-    }
-
-    const response = await axiosInstance.post(
-      `${envConfig.API.SECONDARY_API}/users/logout`,
-      { accessToken: accessToken }
-    );
-
     localStorage.removeItem("accessToken");
     localStorage.removeItem("userData");
-
-    // Redirect user to the homepage
+    toast.success("Logout successfully!");
     window.location.href = "/";
-
-    return response;
   } catch (error) {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("userData");
-    console.error("Error during logout!");
     console.error("Error during logout:", error);
+    toast.success("Logout successfully!");
     window.location.href = "/";
-    return null;
   }
 }
-*/
 
 const localStorageServices = {
   setItemWithExpiry,
   getItemWithExpiry,
   getUserData,
-  setUserData,
+  getLocalStorage,
+  logOutService,
 };
 
 export default localStorageServices;

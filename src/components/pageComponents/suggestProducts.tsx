@@ -1,21 +1,18 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
-
 import ProductCard from "../share/productCard";
 import Link from "next/link";
 import { IProduct } from "@/types/product.type";
 
-interface BestSellsProductsProps {
+interface YouMayLikeProductsProps {
   data: { data: IProduct[] };
 }
-export default function BestSellsProducts({ data }: BestSellsProductsProps) {
+export default function SuggestedProducts({ data }: YouMayLikeProductsProps) {
   return (
     <div className="container mx-auto px-4 py-8 bg-secondary rounded-xl">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <p className="text-sm">Best-selling products</p>
-          <h1 className="text-3xl font-semibold">Best Sellers</h1>
+          <p className="text-sm">Choose the best products</p>
+          <h1 className="text-3xl font-semibold">Suggested Products For You</h1>
         </div>
         <Link href="/products">
           <Button variant="outline" size="sm">

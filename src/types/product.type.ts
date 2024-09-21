@@ -1,12 +1,27 @@
+export const categories = [
+  "Kitchen",
+  "Home Decor",
+  "Stationery",
+  "Jewelry",
+] as const;
+export const brands = [
+  "CraftyHands",
+  "WeaveWonders",
+  "ArtisanClay",
+  "LeatherCraft",
+  "NatureJewels",
+] as const;
+
 export interface IProduct {
-  name: string;
-  category: string;
-  brand?: string;
-  images?: string[];
-  image: string;
-  price: string;
   _id: string;
-  key?: string;
-  from?: string;
+  name: string;
+  description: string;
+  category: (typeof categories)[number];
+  brand: (typeof brands)[number];
+  price: number;
   quantity?: number;
+  images: string[];
+  reviews?: object;
+  visitors: number;
+  from?: string;
 }

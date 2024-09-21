@@ -1,17 +1,6 @@
+import { IProduct } from "@/types/product.type";
 import toast from "react-hot-toast";
 import { create } from "zustand";
-
-interface IProduct {
-  name: string;
-  category: string;
-  brand?: string;
-  images?: string[];
-  image: string;
-  price: string;
-  _id: string;
-  from?: string;
-  quantity?: number;
-}
 
 // Define the store interface
 interface StoreState {
@@ -98,10 +87,12 @@ const useStore = create<StoreState>((set, get) => ({
   addToOrderList: (products: IProduct[]) => {
     const { orderList, products: cartProducts, removeFromCart } = get();
 
-    // Filter out products already in the order list
-    const newProducts = products.filter(
-      (product) => !orderList.some((item) => item._id === product._id)
-    );
+    // Check if products is an array before filtering
+    const newProducts = Array.isArray(products)
+      ? products.filter(
+          (product) => !orderList.some((item) => item._id === product._id)
+        )
+      : []; // Default to an empty array if products is not an array
 
     // Remove from cart if they exist there
     newProducts.forEach((product) => {

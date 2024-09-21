@@ -27,7 +27,25 @@ const categories = [
   { name: "KITCHEN & DINING", image: categories5 },
 ];
 
-export default function Home() {
+export default async function Home() {
+  let data = await fetch(
+    "https://love-bards-server.up.railway.app/api/v1/products/top-visited",
+    { cache: "no-store" }
+  );
+  const famousProducts = await data.json();
+
+  data = await fetch(
+    "https://love-bards-server.up.railway.app/api/v1/products/best-sellers",
+    { cache: "force-cache" }
+  );
+  const bestSellsProducts = await data.json();
+
+  data = await fetch(
+    "https://love-bards-server.up.railway.app/api/v1/products/66ed8906e563f3131c95c01f/related",
+    { cache: "force-cache" }
+  );
+  const youMayLike = await data.json();
+
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -68,10 +86,10 @@ export default function Home() {
 
       <div className="space-y-8 mb-10">
         {/* Famous Products */}
-        <FamousProducts />
+        <FamousProducts data={famousProducts} />
 
         {/* Best Sells Products */}
-        <BestSellsProducts />
+        <BestSellsProducts data={bestSellsProducts} />
 
         {/* Products Info */}
         <Suspense fallback={<div>Loading products info</div>}>
@@ -79,7 +97,7 @@ export default function Home() {
         </Suspense>
 
         {/* You May Like */}
-        <YouMayLike />
+        <YouMayLike data={youMayLike} />
 
         {/* Testimonial */}
         <TestimonialCarousel />
