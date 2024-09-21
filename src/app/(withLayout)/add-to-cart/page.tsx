@@ -21,10 +21,7 @@ const AddToCartPage = () => {
   const { products, addToOrderList } = useStore();
   const router = useRouter();
 
-  const totalPrice = products.reduce(
-    (acc, product) => acc + parseFloat(product.price),
-    0
-  );
+  const totalPrice = products.reduce((acc, product) => acc + product.price, 0);
   const totalProducts = products.length;
 
   const handlePlaceOrder = () => {

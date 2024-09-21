@@ -15,10 +15,10 @@ export const brands = [
 export interface IProduct {
   _id: string;
   name: string;
+  price: number;
   description: string;
   category: (typeof categories)[number];
   brand: (typeof brands)[number];
-  price: number;
   quantity?: number;
   images: string[];
   reviews?: object;
