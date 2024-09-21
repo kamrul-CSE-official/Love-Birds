@@ -4,19 +4,12 @@ import Image from "next/image";
 import { Star, Truck, RotateCcw, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Avatar } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 
 import productImg from "@/assets/p-11.jpg";
-import YouMayLike from "@/components/pageComponents/youMayLike";
 import useStore from "@/app/lib/store";
 import createAxiosInstance from "@/services/axiosInstance";
 import useSWR from "swr";
@@ -24,6 +17,7 @@ import { useState } from "react";
 import Loading from "@/app/loading";
 import SuggestedProducts from "@/components/pageComponents/suggestProducts";
 import { useRouter } from "next/navigation";
+import Reviews from "@/components/pageComponents/reviews";
 
 // Fetcher function for SWR
 const fetcher = async (url: string) =>
@@ -122,7 +116,9 @@ export default function ProductPage({ params }: { params: { _id: string } }) {
           </div>
           <p className="text-gray-600 mb-4">{productDetails?.description}</p>
           <div className="flex items-center mb-4">
-            <span className="text-2xl font-bold">৳ {productDetails?.price}</span>
+            <span className="text-2xl font-bold">
+              ৳ {productDetails?.price}
+            </span>
             <span className="ml-2 text-sm text-gray-500 line-through">
               ৳ {productDetails?.price + (productDetails.price * 20) / 100}
             </span>
@@ -194,8 +190,9 @@ export default function ProductPage({ params }: { params: { _id: string } }) {
           {/* Reviews Tab */}
           <TabsContent value="reviews">
             <div className="space-y-8">
+              <Reviews _id={params._id} />
               {/* Product Rating */}
-              <div className="flex items-center space-x-4">
+              {/* <div className="flex items-center space-x-4">
                 <div className="text-4xl font-bold">4.8</div>
                 <div>
                   <div className="flex text-yellow-400 mb-1">
@@ -205,10 +202,10 @@ export default function ProductPage({ params }: { params: { _id: string } }) {
                   </div>
                   <div className="text-sm text-gray-500">Product Rating</div>
                 </div>
-              </div>
+              </div> */}
 
               {/* Star Rating Breakdown */}
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 {ratingCounts.map((count, index) => (
                   <div key={index} className="flex items-center">
                     <div className="w-12 text-sm text-gray-500">
@@ -220,10 +217,10 @@ export default function ProductPage({ params }: { params: { _id: string } }) {
                     </div>
                   </div>
                 ))}
-              </div>
+              </div> */}
 
               {/* Customer Reviews */}
-              <div className="space-y-4">
+              {/* <div className="space-y-4">
                 {reviews.map((review, index) => (
                   <div key={index} className="border-b pb-4">
                     <div className="flex items-center space-x-2 mb-2">
@@ -252,10 +249,10 @@ export default function ProductPage({ params }: { params: { _id: string } }) {
                     <p className="text-gray-600">{review.content}</p>
                   </div>
                 ))}
-              </div>
+              </div> */}
 
               {/* Review Form */}
-              <div>
+              {/* <div>
                 <h3 className="text-lg font-semibold mb-4">Write a Review</h3>
                 <div className="space-y-4">
                   <div>
@@ -275,7 +272,7 @@ export default function ProductPage({ params }: { params: { _id: string } }) {
                   <Textarea placeholder="Write your review here..." />
                   <Button>Submit Review</Button>
                 </div>
-              </div>
+              </div> */}
             </div>
           </TabsContent>
         </Tabs>

@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import FamousProducts from "@/components/pageComponents/famoursProducts";
@@ -6,11 +6,14 @@ import BestSellsProducts from "@/components/pageComponents/bestSellsProducts";
 import TestimonialCarousel from "@/components/pageComponents/testimonals";
 import YouMayLike from "@/components/pageComponents/youMayLike";
 
-const HomePageBanner = React.lazy(
-  () => import("@/components/pageComponents/homePageBanner")
+// Use dynamic imports for lazy loading components
+const HomePageBanner = dynamic(
+  () => import("@/components/pageComponents/homePageBanner"),
+  { ssr: false }
 );
-const ProductInfo = React.lazy(
-  () => import("@/components/pageComponents/productInfo")
+const ProductInfo = dynamic(
+  () => import("@/components/pageComponents/productInfo"),
+  { ssr: false }
 );
 
 import categories1 from "@/assets/Handicraft-1.jpg";
@@ -18,6 +21,7 @@ import categories2 from "@/assets/Water-2.jpg";
 import categories3 from "@/assets/Pendulum-3.jpg";
 import categories4 from "@/assets/Hangings-4.jpg";
 import categories5 from "@/assets/kitchen-5.jpg";
+import { Suspense } from "react";
 
 const categories = [
   { name: "Handicraft Items", image: categories1 },
@@ -54,6 +58,7 @@ export default async function Home() {
       </Suspense>
 
       {/* Categories Section */}
+      
       <div className="bg-secondary py-4 px-2 sm:px-4 mb-5">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
