@@ -21,18 +21,27 @@ const Reviews = async ({ _id }: { _id: string }) => {
 
   const totalReviews = reviews.data.length;
 
+  let totalRatingSum = 0;
+
+  // Count the number of reviews for each rating and calculate total sum of ratings
+  reviews.data.forEach((review: IReview) => {
+    ratingCounts[5 - review.rating] += 1;
+    totalRatingSum += review.rating;
+  });
+
   // Calculate percentage for each star rating
   const ratingPercentages = ratingCounts.map((count) =>
     totalReviews ? (count / totalReviews) * 100 : 0
   );
+  const averageRating = totalReviews ? totalRatingSum / totalReviews : 0;
 
   return (
     <div>
       <div className="flex items-center space-x-4 my-3 space-y-3">
-        <div className="text-4xl font-bold">4.8</div>
+        <div className="text-4xl font-bold">{averageRating}</div>
         <div>
           <div className="flex text-yellow-400 mb-1">
-            {[...Array(5)].map((_, i) => (
+            {[...Array(averageRating)].map((_, i) => (
               <Star key={i} className="w-5 h-5 fill-current" />
             ))}
           </div>
