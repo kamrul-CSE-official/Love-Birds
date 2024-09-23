@@ -1,12 +1,18 @@
+"use client";
+
 import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import localStorageServices from "@/services/localStorageServices";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const handleLogout = () => {
+    localStorageServices.logOutService();
+  };
   return (
     <div className="container mx-auto px-4 py-8 mt-24">
       <div className="text-sm breadcrumbs mb-4">
@@ -48,6 +54,11 @@ export default function DashboardLayout({
             </TabsTrigger>
             <TabsTrigger value="wishlist" asChild>
               <Link href="/dashboard/wish-list">My Wishlist</Link>
+            </TabsTrigger>
+            <TabsTrigger value="wishlist" asChild>
+              <Button onClick={() => handleLogout()} variant="secondary">
+                Logout
+              </Button>
             </TabsTrigger>
           </TabsList>
         </Tabs>

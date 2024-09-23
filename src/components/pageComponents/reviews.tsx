@@ -3,28 +3,28 @@ import React from "react";
 import { Progress } from "../ui/progress";
 import { Avatar } from "../ui/avatar";
 import { IReview } from "@/types/reviewsType";
-import envConfig from "@/config/envConfig";
 
-const Reviews = async ({ _id }: { _id: string }) => {
-  const data = await fetch(
-    `${envConfig.API.PRIMARY_API}/reviews/product/${_id}`
-  );
-  const reviews = await data.json();
-
+const Reviews = ({
+  reviews,
+  bought,
+}: {
+  reviews: IReview[];
+  bought: boolean;
+}) => {
   // Initialize counts for each star rating
   const ratingCounts = [0, 0, 0, 0, 0]; // Index 0 for 1-star, Index 4 for 5-star
 
   // Count the number of reviews for each rating
-  reviews.data.forEach((review: IReview) => {
+  reviews?.forEach((review: IReview) => {
     ratingCounts[5 - review.rating] += 1;
   });
 
-  const totalReviews = reviews.data.length;
+  const totalReviews = reviews?.length;
 
   let totalRatingSum = 0;
 
   // Count the number of reviews for each rating and calculate total sum of ratings
-  reviews.data.forEach((review: IReview) => {
+  reviews?.forEach((review: IReview) => {
     ratingCounts[5 - review.rating] += 1;
     totalRatingSum += review.rating;
   });
@@ -41,17 +41,16 @@ const Reviews = async ({ _id }: { _id: string }) => {
         <div className="text-4xl font-bold">{averageRating}</div>
         <div>
           <div className="flex text-yellow-400 mb-1">
-            {[...Array(averageRating)].map((_, i) => (
+            {[...Array(averageRating)]?.map((_, i) => (
               <Star key={i} className="w-5 h-5 fill-current" />
             ))}
           </div>
           <div className="text-sm text-gray-500">Product Rating</div>
         </div>
       </div>
-
       {/* Star Rating Breakdown */}
       <div className="space-y-2">
-        {ratingPercentages.map((percentage, index: number) => (
+        {ratingPercentages?.map((percentage, index: number) => (
           <div key={index} className="flex items-center">
             <div className="w-12 text-sm text-gray-500">{5 - index} Star</div>
             <Progress value={percentage} className="w-full h-2" />
@@ -61,36 +60,36 @@ const Reviews = async ({ _id }: { _id: string }) => {
           </div>
         ))}
       </div>
-
       {/* Customer Reviews */}
       <div className="space-y-4">
-        {reviews.data.map((review: IReview, index: number) => (
+        {reviews?.map((review: IReview, index: number) => (
           <div key={index} className="border-b pb-4">
             <div className="flex items-center space-x-2 mb-2">
               <Avatar className="w-10 h-10 rounded-full">
                 <div className="bg-primary text-primary-foreground flex items-center justify-center">
-                  {review.user.name[0]}
+                  {review?.user?.name[0]}
                 </div>
               </Avatar>
               <div>
-                <div className="font-semibold">{review.user.name}</div>
+                <div className="font-semibold">{review?.user?.name}</div>
                 <div className="text-sm text-gray-500">{review._id}</div>
               </div>
             </div>
             <div className="flex text-yellow-400 mb-2">
-              {[...Array(5)].map((_, star) => (
+              {[...Array(5)]?.map((_, star) => (
                 <Star
                   key={star}
                   className={`w-4 h-4 ${
-                    star < review.rating ? "fill-current" : ""
+                    star < review?.rating ? "fill-current" : ""
                   }`}
                 />
               ))}
             </div>
-            <p className="text-gray-600">{review.comment}</p>
+            <p className="text-gray-600">{review?.comment}</p>
           </div>
         ))}
       </div>
+      {bought && <p>This product you already bought.....</p>}
     </div>
   );
 };

@@ -3,6 +3,7 @@
   "rules": {
     "eslintreact/no-unescaped-entities": "off",
     "@typescript-eslint/no-unused-vars": "off", // Turn off unused vars rule globally
-    "react-hooks/exhaustive-deps": "off" // Disable exhaustive-deps rule globally
+    "react-hooks/exhaustive-deps": "off", // Disable exhaustive-deps rule globally
+    // "@typescript-eslint/no-explicit-any": "off"
   }
 }

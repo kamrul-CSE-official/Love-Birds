@@ -61,7 +61,7 @@ export default function Navbar() {
   const router = useRouter();
   const { products, wishlist } = useStore();
 
-  const isUserLogedIn = localStorageServices.getUserData();
+  const isUserLogedIn = localStorageServices.getItemWithExpiry("accessToken");
 
   const handleSearch = () => {
     let queryParams = "";
