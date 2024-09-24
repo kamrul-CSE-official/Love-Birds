@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { useForm, Controller } from "react-hook-form";
 import localStorageServices from "@/services/localStorageServices";
 import createAxiosInstance from "@/services/axiosInstance";
+import clsx from "clsx";
 
 interface OrderFormData {
   address: string;
@@ -67,7 +68,7 @@ const PlaceOrder = () => {
         paymentWith: data.paymentMethod,
         user: isLoggedIn?.userId,
       };
-
+console.log(orderData)
       await createAxiosInstance().post("/orders", orderData);
       toast.success("Order placed successfully!");
       router.push("/dashboard/my-orders");
