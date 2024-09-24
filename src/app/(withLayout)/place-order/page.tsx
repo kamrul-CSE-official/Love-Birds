@@ -68,7 +68,7 @@ const PlaceOrder = () => {
         paymentWith: data.paymentMethod,
         user: isLoggedIn?.userId,
       };
-console.log(orderData)
+      console.log(orderData);
       await createAxiosInstance().post("/orders", orderData);
       toast.success("Order placed successfully!");
       router.push("/dashboard/my-orders");
