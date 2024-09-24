@@ -57,11 +57,14 @@ const PlaceOrder = () => {
         return;
       }
 
+      
       const orderData = {
-        products: orderList.map((product) => ({
-          product: product?._id,
-          quantity: quantities[product._id] || 1,
-        })),
+        products: orderList
+          .filter((product) => quantities[product._id] > 0)
+          .map((product) => ({
+            product: product?._id,
+            quantity: quantities[product._id] || 1,
+          })),
         totalAmount: calculateTotal(),
         address: data.address,
         mobile: data.mobile,
@@ -72,8 +75,8 @@ const PlaceOrder = () => {
       await createAxiosInstance().post("/orders", orderData);
       toast.success("Order placed successfully!");
       router.push("/dashboard/my-orders");
-    } catch (error) {
-      console.error("Error placing order:", error);
+    } catch (error:any) {
+      console.error("Error placing order:", error?.response?.data || error?.message || error);
       toast.error("Failed to place order");
     }
   };
