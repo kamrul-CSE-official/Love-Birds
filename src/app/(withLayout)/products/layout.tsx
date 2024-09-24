@@ -19,8 +19,8 @@ import { useEffect, useState } from "react";
 import { BiLeftArrow, BiRightArrow } from "react-icons/bi";
 
 
-export const categories = ["Kitchen", "Home Decor", "Stationery", "Jewelry"];
-export const brands = [
+const categories = ["Kitchen", "Home Decor", "Stationery", "Jewelry"];
+const brands = [
   "CraftyHands",
   "WeaveWonders",
   "ArtisanClay",
