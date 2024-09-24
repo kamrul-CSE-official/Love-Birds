@@ -1,35 +1,34 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import Link from "next/link";
+import { Suspense } from "react";
+import envConfig from "@/config/envConfig";
+
+// Components
 import FamousProducts from "@/components/pageComponents/famoursProducts";
 import BestSellsProducts from "@/components/pageComponents/bestSellsProducts";
 import TestimonialCarousel from "@/components/pageComponents/testimonals";
 import YouMayLike from "@/components/pageComponents/youMayLike";
 
-// Use dynamic imports for lazy loading components
-const HomePageBanner = dynamic(
-  () => import("@/components/pageComponents/homePageBanner"),
-  { ssr: false }
-);
+// Dynamic imports
 const ProductInfo = dynamic(
   () => import("@/components/pageComponents/productInfo"),
   { ssr: false }
 );
 
+// Category images
 import categories1 from "@/assets/Handicraft-1.jpg";
 import categories2 from "@/assets/Water-2.jpg";
 import categories3 from "@/assets/Pendulum-3.jpg";
 import categories4 from "@/assets/Hangings-4.jpg";
 import categories5 from "@/assets/kitchen-5.jpg";
-import { Suspense } from "react";
-import envConfig from "@/config/envConfig";
+import Link from "next/link";
+import HomePageBanner from "@/components/pageComponents/homePageBanner";
 
 const categories = [
-  { name: "Handicraft Items", image: categories1 },
-  { name: "Water Fountains", image: categories2 },
-  { name: "Pendulum Clocks", image: categories3 },
-  { name: "Wall Hangings", image: categories4 },
-  { name: "KITCHEN & DINING", image: categories5 },
+  { name: "Kitchen", image: categories1 },
+  { name: "Home Decor", image: categories2 },
+  { name: "Stationery", image: categories3 },
+  { name: "Jewelry", image: categories4 },
 ];
 
 export default async function Home() {
@@ -51,19 +50,16 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
-      {/* Hero Section */}
-      <Suspense fallback={<div>Loading banner...</div>}>
-        <HomePageBanner />
-      </Suspense>
+      {/* Full-height Banner */}
+      <HomePageBanner />
 
       {/* Categories Section */}
-
       <div className="bg-secondary py-4 px-2 sm:px-4 mb-5">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          <div className="flex items-center justify-center gap-6 flex-wrap">
             {categories.map((category, index) => (
               <Link
-                href={`/category/${category.name
+                href={`/products?category=${category.name
                   .toLowerCase()
                   .replace(/\s+/g, "-")}`}
                 key={index}
@@ -75,7 +71,7 @@ export default async function Home() {
                       alt={category.name}
                       layout="fill"
                       objectFit="cover"
-                      className="rounded-full border-2 border-primary group-hover:scale-1 transform transition duration-150"
+                      className="rounded-full border-2 border-primary group-hover:scale-105 transform transition duration-150"
                     />
                   </div>
                   <span className="text-xs sm:text-sm text-center font-semibold">

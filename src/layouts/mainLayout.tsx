@@ -6,16 +6,13 @@ import { Toaster } from "react-hot-toast";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="min-h-screen flex flex-col relative">
+    <div className="min-h-screen flex flex-col">
       {/* Navbar */}
-      <nav
-        style={{ position: "absolute", top: 0, right: 0, zIndex: 100 }}
-        className="w-full"
-      >
+      <nav className="fixed top-0 left-0 right-0 z-50">
         <Navbar />
       </nav>
 
-      {/* Content: Flex-grow ensures this takes up remaining space */}
+      {/* Content */}
       <main className="flex-grow">
         {children}
         <ScrollToTop />

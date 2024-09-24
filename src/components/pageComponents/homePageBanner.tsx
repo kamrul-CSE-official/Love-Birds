@@ -29,6 +29,7 @@ import banner13 from "@/assets/banner1.12.jpg";
 
 import offerImg from "@/assets/offer dialog.gif"; // Importing the offer GIF image
 import localStorageServices from "@/services/localStorageServices";
+import Link from "next/link";
 
 // List of banners
 const banners = [
@@ -86,7 +87,7 @@ const HomePageBanner = () => {
   }, []);
 
   return (
-    <div className="relative w-full flex-grow h-[69vh] mt-0 lg:mt-9">
+    <div className="h-screen relative">
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -115,8 +116,6 @@ const HomePageBanner = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* Banner slider with animation */}
       <motion.div
         key={currentBanner}
         initial={{ opacity: 0, scale: 0.95 }}
@@ -127,13 +126,25 @@ const HomePageBanner = () => {
       >
         <Image
           src={banners[currentBanner]}
-          alt="Decorative handicraft items"
+          alt="Welcome to our store"
           layout="fill"
           objectFit="cover"
-          priority={currentBanner === 0} // Prioritize first image
-          className="w-full h-full"
+          priority={currentBanner === 0}
         />
       </motion.div>
+      <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-white">
+        <h1 className="text-4xl md:text-6xl font-bold mb-4">
+          Welcome to Our Store
+        </h1>
+        <p className="text-xl md:text-2xl mb-8">
+          Discover unique handcrafted items
+        </p>
+        <Link href="/products">
+          <p className="bg-primary text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-primary-dark transition-colors">
+            Shop Now
+          </p>
+        </Link>
+      </div>
     </div>
   );
 };

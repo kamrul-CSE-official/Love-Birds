@@ -6,7 +6,7 @@ import { jwtDecode } from "jwt-decode";
 const isBrowser = typeof window !== "undefined";
 
 // Interface for the decoded JWT token
-interface DecodedToken {
+export interface DecodedToken {
   exp: number;
   [key: string]: any; // Other JWT fields can vary
 }
