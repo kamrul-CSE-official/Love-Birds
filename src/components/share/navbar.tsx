@@ -38,12 +38,16 @@ import localStorageServices from "@/services/localStorageServices";
 // Navigation items and product types as constants
 const navItems = [
   { _id: "0", name: "Home", path: "/" },
-  { _id: "1", name: "BAGS", path: "/products/BAGS" },
-  { _id: "2", name: "BASKETS", path: "/products/BASKETS" },
-  { _id: "3", name: "HOME DECOR", path: "/products/HOME_DECOR" },
-  { _id: "4", name: "KITCHEN & DINING", path: "/products/KITCHEN_DINING" },
-  { _id: "5", name: "BEST SELLES", path: "/best-selles" },
-  { _id: "6", name: "ACCESSORIES", path: "/accessories" },
+  { _id: "1", name: "BAGS", path: "/products?category=BAGS" },
+  { _id: "2", name: "BASKETS", path: "/products?category=BASKETS" },
+  { _id: "3", name: "HOME DECOR", path: "/products?category=HOME_DECOR" },
+  {
+    _id: "4",
+    name: "KITCHEN & DINING",
+    path: "/products?category=KITCHEN_DINING",
+  },
+  { _id: "5", name: "BEST SELLES", path: "/products?category=best-selles" },
+  { _id: "6", name: "ACCESSORIES", path: "/products?category=accessories" },
   { _id: "7", name: "ABOUT US", path: "/about-us" },
 ];
 
