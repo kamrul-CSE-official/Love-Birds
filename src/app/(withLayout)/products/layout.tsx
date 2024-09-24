@@ -18,6 +18,16 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BiLeftArrow, BiRightArrow } from "react-icons/bi";
 
+
+export const categories = ["Kitchen", "Home Decor", "Stationery", "Jewelry"];
+export const brands = [
+  "CraftyHands",
+  "WeaveWonders",
+  "ArtisanClay",
+  "LeatherCraft",
+  "NatureJewels",
+];
+
 export default function ProductsLayout({
   children,
 }: {
@@ -36,21 +46,15 @@ export default function ProductsLayout({
   const searchSort = searchParams.get("sort");
 
   const [name, setName] = useState<string | null>(searchName);
-  const [category, setCategory] = useState<string | null>(searchCategory);
-  const [brand, setBrand] = useState<string | null>(searchBrand);
+  const [category, setCategory] = useState<string | null>(categories[0]);
+  const [brand, setBrand] = useState<string | null>(brands[0]);
   const [maxPrice, setMaxPrice] = useState<string | null>(searchMaxPrice);
   const [minPrice, setMinPrice] = useState<string | null>(searchMinPrice);
   const [page, setPage] = useState<string | null>(searchPage);
   const [quantity, setQuantity] = useState<string | null>(searchQuantity);
   const [sort, setSort] = useState<string | null>(searchSort);
-  const [url, setUrl] = useState<string | null>(searchSort);
 
-  useEffect(() => {
-    if (searchName) setName(searchName);
-    if (searchPage) setPage(searchPage);
-    if (searchQuantity) setQuantity(searchQuantity);
-  }, [searchName, searchPage, searchQuantity]);
-
+  // Update URL dynamically when filter values change
   useEffect(() => {
     const updatedUrl = `/products?quantity=${quantity}&page=${page}&minPrice=${minPrice}&maxPrice=${maxPrice}&brand=${brand}&category=${category}&name=${name}&sort=${sort}`;
     route.push(updatedUrl);
@@ -71,8 +75,6 @@ export default function ProductsLayout({
           setMaxPrice={setMaxPrice}
           page={page}
           setPage={setPage}
-          setUrl={setUrl}
-          quantity={quantity}
         />
       </aside>
 
@@ -100,8 +102,6 @@ export default function ProductsLayout({
                   setMaxPrice={setMaxPrice}
                   page={page}
                   setPage={setPage}
-                  setUrl={setUrl}
-                  quantity={quantity}
                 />
               </SheetContent>
             </Sheet>
@@ -146,8 +146,6 @@ function SidebarContent({
   setMaxPrice,
   page,
   setPage,
-  setUrl,
-  quantity,
 }: {
   category: string | null;
   setCategory: (value: string | null) => void;
@@ -159,8 +157,6 @@ function SidebarContent({
   setMaxPrice: (value: string | null) => void;
   page: string | null;
   setPage: (value: string | null) => void;
-  setUrl: (value: string | null) => void;
-  quantity: string | null;
 }) {
   return (
     <nav className="space-y-6">
@@ -168,24 +164,15 @@ function SidebarContent({
         <h3 className="font-semibold mb-2">Refine By</h3>
         <div className="space-y-2">
           <h4 className="text-sm font-medium">Category</h4>
-          <FilterCheckbox
-            label="DECORATIVE & SPORTS ITEMS (1007)"
-            value="decorative"
-            checked={category === "decorative"}
-            onChange={() => setCategory("decorative")}
-          />
-          <FilterCheckbox
-            label="SPORTS & GIFTS (194)"
-            value="sports"
-            checked={category === "sports"}
-            onChange={() => setCategory("sports")}
-          />
-          <FilterCheckbox
-            label="LEAF CUPS & SAUCERS (32)"
-            value="leaf_cups"
-            checked={category === "leaf_cups"}
-            onChange={() => setCategory("leaf_cups")}
-          />
+          {categories.map((cat: string, i: number) => (
+            <FilterCheckbox
+              key={i}
+              label={cat}
+              value={cat}
+              checked={category === cat}
+              onChange={() => setCategory(cat)}
+            />
+          ))}
         </div>
       </div>
 
@@ -207,33 +194,20 @@ function SidebarContent({
             onChange={(e) => setMaxPrice(e.target.value)}
             className="w-20"
           />
-          <Button
-            size="sm"
-            onClick={() =>
-              setUrl(
-                `/products?quantity=${quantity}&page=${page}&minPrice=${minPrice}&maxPrice=${maxPrice}`
-              )
-            }
-          >
-            Go
-          </Button>
         </div>
       </div>
 
       <div>
         <h4 className="text-sm font-medium mb-2">Brand</h4>
-        <FilterCheckbox
-          label="Brand A"
-          value="brand_a"
-          checked={brand === "brand_a"}
-          onChange={() => setBrand("brand_a")}
-        />
-        <FilterCheckbox
-          label="Brand B"
-          value="brand_b"
-          checked={brand === "brand_b"}
-          onChange={() => setBrand("brand_b")}
-        />
+        {brands?.map((brand: string, i: number) => (
+          <FilterCheckbox
+            key={i}
+            label={brand}
+            value={brand}
+            checked={brand === brand}
+            onChange={() => setBrand(brand)}
+          />
+        ))}
       </div>
 
       <div>

@@ -22,6 +22,7 @@ import categories3 from "@/assets/Pendulum-3.jpg";
 import categories4 from "@/assets/Hangings-4.jpg";
 import categories5 from "@/assets/kitchen-5.jpg";
 import { Suspense } from "react";
+import envConfig from "@/config/envConfig";
 
 const categories = [
   { name: "Handicraft Items", image: categories1 },
@@ -32,20 +33,18 @@ const categories = [
 ];
 
 export default async function Home() {
-  let data = await fetch(
-    "https://love-bards-server.up.railway.app/api/v1/products/top-visited",
-    { cache: "no-store" }
-  );
+  let data = await fetch(`${envConfig.API.PRIMARY_API}/products/top-visited`, {
+    cache: "no-store",
+  });
   const famousProducts = await data.json();
 
-  data = await fetch(
-    "https://love-bards-server.up.railway.app/api/v1/products/best-sellers",
-    { cache: "force-cache" }
-  );
+  data = await fetch(`${envConfig.API.PRIMARY_API}/products/best-sellers`, {
+    cache: "force-cache",
+  });
   const bestSellsProducts = await data.json();
 
   data = await fetch(
-    "https://love-bards-server.up.railway.app/api/v1/products/66ed8906e563f3131c95c01f/related",
+    `${envConfig.API.PRIMARY_API}/products/66ed8906e563f3131c95c01f/related`,
     { cache: "force-cache" }
   );
   const youMayLike = await data.json();
@@ -58,7 +57,7 @@ export default async function Home() {
       </Suspense>
 
       {/* Categories Section */}
-      
+
       <div className="bg-secondary py-4 px-2 sm:px-4 mb-5">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">

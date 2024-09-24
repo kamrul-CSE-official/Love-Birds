@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import useStore from "@/app/lib/store";
 import SuggestedProducts from "@/components/pageComponents/suggestProducts";
 import Reviews from "@/components/pageComponents/reviews";
-import Loading from "@/app/loading";
 import {
   useIsBought,
   useProductDetails,
@@ -18,6 +17,7 @@ import {
   useSuggestedProducts,
 } from "@/hooks/productHooks";
 import { IReview } from "@/types/reviewsType";
+import Loading from "@/components/share/loading";
 
 // Define a type for productDetails
 type ProductDetails = {
@@ -57,6 +57,8 @@ export default function ProductPage({ params }: { params: { _id: string } }) {
     isLoading: suggestedLoading,
     error: suggestedError,
   } = useSuggestedProducts(params._id);
+
+  console.log(" Reviews: ", reviews);
 
   const [quantity, setQuantity] = useState(1);
   const { addToCart, addToOrderList } = useStore();
@@ -129,6 +131,7 @@ export default function ProductPage({ params }: { params: { _id: string } }) {
         reviews={reviews}
         reviewsLoading={reviewsLoading}
         bought={isBought}
+        productId={params?._id || ""}
       />
 
       {/* Suggested Products */}
@@ -137,7 +140,7 @@ export default function ProductPage({ params }: { params: { _id: string } }) {
       ) : suggestedError ? (
         <p>Suggested products not found!</p>
       ) : (
-        <SuggestedProducts data={suggestedProducts?.data} />
+        <SuggestedProducts data={suggestedProducts} />
       )}
     </div>
   );
@@ -229,11 +232,13 @@ const TabsSection = ({
   reviews,
   reviewsLoading,
   bought,
+  productId,
 }: {
   productDetails: ProductDetails;
-  reviews: { data: IReview[] };
+  reviews: IReview[];
   reviewsLoading: boolean;
   bought: boolean;
+  productId: string;
 }) => (
   <div className="my-12">
     <Tabs defaultValue="reviews" className="w-full">
@@ -259,7 +264,7 @@ const TabsSection = ({
         {reviewsLoading ? (
           <Loading />
         ) : (
-          <Reviews bought={bought} reviews={reviews?.data} />
+          <Reviews productId={productId} bought={bought} reviews={reviews} />
         )}
       </TabsContent>
     </Tabs>

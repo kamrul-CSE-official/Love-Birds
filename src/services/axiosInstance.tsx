@@ -54,12 +54,8 @@ const createAxiosInstance = (
         sent?: boolean;
       };
 
-      if (
-        error.response?.status === 401 ||
-        error.response?.status === 403 ||
-        !config.sent
-      ) {
-        window.location.href = "/";
+      if (error.response?.status === 403) {
+        // window.location.href = "/";
         return Promise.reject({
           statusCode: 403,
           message: "Session expired. Please log in again.",

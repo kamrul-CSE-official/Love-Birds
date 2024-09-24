@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import useStore from "@/app/lib/store";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,55 +9,79 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
-import { IProduct } from "@/types/product.type";
-import localStorageServices from "@/services/localStorageServices";
 import { useRouter } from "next/navigation";
+import { useForm, Controller } from "react-hook-form";
+import localStorageServices from "@/services/localStorageServices";
+import createAxiosInstance from "@/services/axiosInstance";
+
+interface OrderFormData {
+  address: string;
+  mobile: string;
+  paymentMethod: "Cash on Delivery" | "Card Payment";
+}
+
+interface Product {
+  _id: string;
+  name: string;
+  price: number;
+}
 
 const PlaceOrder = () => {
   const { orderList, removeFromOrderList } = useStore();
   const [quantities, setQuantities] = useState<Record<string, number>>({});
-  const [address, setAddress] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("cash");
-
   const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<OrderFormData>({
+    defaultValues: {
+      paymentMethod: "Cash on Delivery",
+    },
+  });
+
+  const calculateTotal = () => {
+    return orderList.reduce((total, product) => {
+      const quantity = quantities[product._id] || 1;
+      return total + product.price * quantity;
+    }, 0);
+  };
+
+  const onSubmit = async (data: OrderFormData) => {
+    try {
+      const isLoggedIn = localStorageServices.getUserData();
+      if (!isLoggedIn) {
+        router.push("/auth");
+        return;
+      }
+
+      const orderData = {
+        products: orderList.map((product) => ({
+          product: product?._id,
+          quantity: quantities[product._id] || 1,
+        })),
+        totalAmount: calculateTotal(),
+        address: data.address,
+        mobile: data.mobile,
+        paymentWith: data.paymentMethod,
+        user: isLoggedIn?.userId,
+      };
+
+      await createAxiosInstance().post("/orders", orderData);
+      toast.success("Order placed successfully!");
+      router.push("/dashboard/my-orders");
+    } catch (error) {
+      console.error("Error placing order:", error);
+      toast.error("Failed to place order");
+    }
+  };
 
   const handleQuantityChange = (id: string, change: number) => {
     setQuantities((prev) => ({
       ...prev,
       [id]: Math.max((prev[id] || 1) + change, 1),
     }));
-  };
-
-  const calculateTotal = () => {
-    return orderList.reduce((total, product: IProduct) => {
-      const quantity = quantities[product._id] || 1;
-      return total + product.price * quantity;
-    }, 0);
-  };
-
-  const handleSubmit = async () => {
-    try {
-      const isLogedIn = localStorageServices.getItemWithExpiry("accessToken");
-      if (isLogedIn) {
-        await axios.post("/api/orders", {
-          orderList: orderList.map((product) => ({
-            ...product,
-            quantity: quantities[product._id] || 1,
-          })),
-          total: calculateTotal(),
-          address,
-          mobile,
-          paymentMethod,
-        });
-        toast.success("Order placed successfully!");
-      } else {
-        router.push("/auth");
-      }
-    } catch (error) {
-      console.error("Error placing order:", error);
-      toast.error("Failed to place order");
-    }
   };
 
   return (
@@ -81,7 +104,7 @@ const PlaceOrder = () => {
               <CardTitle>Order Summary</CardTitle>
             </CardHeader>
             <CardContent>
-              {orderList.map((product: IProduct) => {
+              {orderList.map((product: Product) => {
                 const quantity = quantities[product._id] || 1;
                 const totalPrice = product.price * quantity;
                 return (
@@ -95,7 +118,7 @@ const PlaceOrder = () => {
                         Price: ৳{product.price}
                       </p>
                       <p className="text-sm font-medium">
-                        Total: ৳ {totalPrice.toFixed(2)}
+                        Total: ৳{totalPrice.toFixed(2)}
                       </p>
                       <p className="text-sm font-medium">
                         Quantity: {quantity}
@@ -133,56 +156,68 @@ const PlaceOrder = () => {
           </Card>
         </div>
         <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Delivery Details</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="address">Delivery Address</Label>
-                <Input
-                  id="address"
-                  placeholder="Enter your address"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="mobile">Mobile Number</Label>
-                <Input
-                  id="mobile"
-                  type="tel"
-                  placeholder="Enter your mobile number"
-                  value={mobile}
-                  onChange={(e) => setMobile(e.target.value)}
-                />
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Payment Method</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <RadioGroup
-                value={paymentMethod}
-                onValueChange={setPaymentMethod}
-                className="space-y-2"
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="cash" id="cash" />
-                  <Label htmlFor="cash">Cash on Delivery</Label>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Card>
+              <CardHeader>
+                <CardTitle>Delivery Details</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="address">Delivery Address</Label>
+                  <Input
+                    id="address"
+                    placeholder="Enter your address"
+                    {...register("address", { required: true })}
+                  />
+                  {errors.address && (
+                    <p className="text-red-500">Address is required</p>
+                  )}
                 </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="card" id="card" />
-                  <Label htmlFor="card">Card Payment</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="mobile">Mobile Number</Label>
+                  <Input
+                    id="mobile"
+                    type="tel"
+                    placeholder="Enter your mobile number"
+                    {...register("mobile", { required: true })}
+                  />
+                  {errors.mobile && (
+                    <p className="text-red-500">Mobile number is required</p>
+                  )}
                 </div>
-              </RadioGroup>
-            </CardContent>
-          </Card>
-          <Button className="w-full" size="lg" onClick={handleSubmit}>
-            Place Order
-          </Button>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Payment Method</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Controller
+                  name="paymentMethod"
+                  control={control}
+                  render={({ field }) => (
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="space-y-2"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="Cash on Delivery" id="cash" />
+                        <Label htmlFor="cash">Cash on Delivery</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="Card Payment" id="card" />
+                        <Label htmlFor="card">Card Payment</Label>
+                      </div>
+                    </RadioGroup>
+                  )}
+                />
+              </CardContent>
+            </Card>
+            <Button className="w-full" size="lg" type="submit">
+              Place Order
+            </Button>
+          </form>
         </div>
       </div>
     </div>

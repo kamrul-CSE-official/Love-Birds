@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import localStorageServices from "@/services/localStorageServices";
+import { useEffect } from "react";
 
 export default function DashboardLayout({
   children,
@@ -13,6 +14,15 @@ export default function DashboardLayout({
   const handleLogout = () => {
     localStorageServices.logOutService();
   };
+
+  useEffect(() => {
+    const accessToken = localStorageServices.getItemWithExpiry("accessToken");
+    const userData = localStorageServices.getUserData();
+    console.log(userData);
+    if (!accessToken || !userData) {
+      window.location.href = "/";
+    }
+  }, []);
   return (
     <div className="container mx-auto px-4 py-8 mt-24">
       <div className="text-sm breadcrumbs mb-4">
@@ -36,18 +46,13 @@ export default function DashboardLayout({
           className="w-full md:w-64 space-y-4"
           orientation="vertical"
         >
-          <TabsList className="flex flex-col items-start h-full space-y-2">
+          <TabsList className="flex flex-col items-start h-full space-y-2 py-5">
             <TabsTrigger value="account" asChild>
               <Link href="/dashboard">Account Dashboard</Link>
             </TabsTrigger>
-            <TabsTrigger value="information" asChild>
-              <Link href="/dashboard/information">Account Information</Link>
-            </TabsTrigger>
-            <TabsTrigger value="address" asChild>
-              <Link href="/dashboard/address">Address Book</Link>
-            </TabsTrigger>
+
             <TabsTrigger value="orders" asChild>
-              <Link href="/dashboard/orders">My Orders</Link>
+              <Link href="/dashboard/my-orders">My Orders</Link>
             </TabsTrigger>
             <TabsTrigger value="addToCart" asChild>
               <Link href="/dashboard/add-to-cart">Add To Cart</Link>
@@ -55,8 +60,12 @@ export default function DashboardLayout({
             <TabsTrigger value="wishlist" asChild>
               <Link href="/dashboard/wish-list">My Wishlist</Link>
             </TabsTrigger>
-            <TabsTrigger value="wishlist" asChild>
-              <Button onClick={() => handleLogout()} variant="secondary">
+            <TabsTrigger value="logout" asChild>
+              <Button
+                className="w-full"
+                onClick={() => handleLogout()}
+                variant="destructive"
+              >
                 Logout
               </Button>
             </TabsTrigger>

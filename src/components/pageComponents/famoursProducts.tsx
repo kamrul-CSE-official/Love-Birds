@@ -27,7 +27,7 @@ const FamousProducts = ({ data }: FamousProductsProps) => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => {
         const isForward = direction === "forward";
-        const isLastIndex = prevIndex === data.data.length - 1;
+        const isLastIndex = prevIndex === data?.data?.length - 1;
         const isFirstIndex = prevIndex === 0;
 
         if (isForward && isLastIndex) {
@@ -50,7 +50,7 @@ const FamousProducts = ({ data }: FamousProductsProps) => {
     }, 1500);
 
     return () => clearInterval(interval);
-  }, [direction, data.data.length]);
+  }, [direction, data?.data?.length]);
 
   return (
     <div className="w-full lg:max-w-7xl mx-auto">
